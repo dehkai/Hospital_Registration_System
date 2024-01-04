@@ -14,9 +14,9 @@ public class Admin extends User{
         return null;
     }
 
-    // public List<Appointment> getAppointment(){
-    //     return null;
-    // }
+    public List<Appointment> getAppointment(){
+        return null;
+    }
 
     public void admitpatient(){
         

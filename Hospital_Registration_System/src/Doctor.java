@@ -28,9 +28,10 @@ public class Doctor extends User {
 
     }
 
-    // public List<Appoinment> getAvailableAppointmentSlots(){
+    public List<Appointment> getAvailableAppointmentSlots(){
+        return null;
         
-    // }
+    }
 }
     
 
