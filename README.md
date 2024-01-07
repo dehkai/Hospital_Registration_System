@@ -1,1 +1,1 @@
-# Hostipal_Registration_System
+# Hospital_Registration_System
