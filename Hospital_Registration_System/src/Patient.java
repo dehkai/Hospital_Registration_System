@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Patient extends User {
     private String medicalRecordNumber, medicalRecord, InsuranceProvider;
 
@@ -32,7 +34,7 @@ public class Patient extends User {
     }
 
     public void updatePatient() {
-
+        
     }
 
     public void requestAppointment() {
@@ -46,7 +48,9 @@ public class Patient extends User {
     public void updateAppointment() {
 
     }
+    
 }
+
     
 
     
