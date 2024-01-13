@@ -1,12 +1,10 @@
+import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.UUID;
 import java.io.Console;
-
-import javax.swing.JOptionPane;
 
 public class Appointment {
 
@@ -70,20 +68,36 @@ public class Appointment {
     public void setAppoinmentStatus(String status) {
         this.status = status;
     }
+    public static void clearConsole() {
+        try {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
+        int choice;
+        do {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to Hospital Management System");
+        System.out.println("Welcome to Hospital Management System\n");
         System.out.println("1. Register");
         System.out.println("2. Login");
         System.out.println("3. Quit");
-        System.out.print("Choose an option (1-3): ");
+        System.out.print("\nChoose an option (1-3): ");
 
-        int choice = scanner.nextInt();
+        choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
             case 1:
-                System.out.print("Enter your name: ");
+                System.out.print("\nEnter your name: ");
                 String name = scanner.nextLine();
                 System.out.print("Enter your email: ");
                 String email = scanner.nextLine();
@@ -95,17 +109,12 @@ public class Appointment {
                 String address = scanner.nextLine();
                 System.out.print("Enter your phone number (Start with 60): ");
                 String phoneNumber = scanner.nextLine();
-                scanner.nextLine(); 
                 System.out.print("Enter your date of birth (YYYY-MM-DD): ");
                 String dateOfBirth = scanner.nextLine();
-
                 LocalDate registrationDate = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String formattedRegistrationDate = registrationDate.format(formatter);
 
-                
-
-                // Create a new User object
                 User newUser = new User();
                 
                 newUser.setName(name);
@@ -119,23 +128,42 @@ public class Appointment {
                 newUser.setRegistrationDate(formattedRegistrationDate);
                 newUser.setRole("Patient");
 
-                // Save the user to a text file
                 User.writeUserToFile(newUser);
 
-                System.out.println("Registration successful!");
-            break;
+                clearConsole();
+                System.out.println("\nRegistration successful! Please proceed to login with your email and password.");
+                
+                break;
                 
             case 2:
-                System.out.println("You have chosen option 2");
+                System.out.print("\nEnter your email: ");
+                String loginEmail = scanner.nextLine();
+                char[] passwordArray = System.console().readPassword("Enter your password: ");
+                String loginPassword = new String(passwordArray);
+                User loginUser = new User();
+                User loggedInUser = loginUser.login(loginEmail, loginPassword);
+                if (loggedInUser != null) {
+                    clearConsole();
+                    System.out.println("Login successful! Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                    if (loggedInUser.getRole().equals("Patient")) {
+                        //Patient.displayPatientInterface();
+                    } else if (loggedInUser.getRole().equals("doctor")) {
+                        // Handle doctor login
+                    } else if (loggedInUser.getRole().equals("admin")) {
+                        // Handle admin login
+                    }
+                } else {
+                    System.out.println("Login failed. Invalid credentials.");
+                }
                 break;
             case 3:
-                System.out.println("Quitting the system. Goodbye!");
+                System.out.println("\nThank you for using Hospital Management System. Goodbye!");
                 System.exit(0);
-            default:
-                System.out.println("Invalid choice");
-        }
-        scanner.close();
+                break;
+                
     
+    }
+    } while (choice != 2 && choice != 3);
     }
     //     User user = new User();
     //     Console console = System.console();
@@ -178,22 +206,22 @@ public class Appointment {
 
     //             String role = user.login(username, password);
 
-    //             if (role != null) {
-    //                 console.printf("Login successful! User's role: %s%n", role);
-    //                 //JOptionPane.showMessageDialog(null,"Login successful! User's role: " + role);   
-    //                 if(role.equals("patient")){
-    //                     Patient.displayPatientInterface();
-    //                 }else if(role.equals("doctor")){
+            //     if (role != null) {
+            //         console.printf("Login successful! User's role: %s%n", role);
+            //         //JOptionPane.showMessageDialog(null,"Login successful! User's role: " + role);   
+            //         if(role.equals("patient")){
+            //             Patient.displayPatientInterface();
+            //         }else if(role.equals("doctor")){
                         
-    //                 }else if(role.equals("admin")){
+            //         }else if(role.equals("admin")){
                          
-    //                 }
-    //             } else {
-    //                 JOptionPane.showMessageDialog(null, "Login failed. Invalid credentials.");
-    //             }
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Thank you for using Hospital Registration System. Goodbye!");
-    //         }
+            //         }
+            //     } else {
+            //         JOptionPane.showMessageDialog(null, "Login failed. Invalid credentials.");
+            //     }
+            // } else {
+            //     JOptionPane.showMessageDialog(null, "Thank you for using Hospital Registration System. Goodbye!");
+            // }
     //     }
     // }
     }

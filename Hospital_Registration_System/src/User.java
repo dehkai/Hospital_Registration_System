@@ -131,7 +131,7 @@ public class User {
 
             String userRecord = user.getEmail() + "," + user.getPassword() + "," + user.getRole() + ","
                     + user.getDateOfBirth() + "," + user.getRegistrationDate()
-                    + "," + "," + user.getName() + "," + user.getGender() + ","
+                    + "," + user.getName() + "," + user.getGender() + ","
                     + user.getAddress() + "," + user.getPhoneNumber();
             bw.write(userRecord);
             bw.newLine();
@@ -141,48 +141,51 @@ public class User {
     }
 
 
-    public String login(String inputEmail, String inputPassword) {
-       
+    public User login(String inputEmail, String inputPassword) {
         try (BufferedReader br = new BufferedReader(new FileReader(DATABASE_FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String storedEmail = parts[0].trim();
-                    String storedPassword = parts[1].trim();
-                    String role = parts[2].trim();
-
+                if (parts.length == 9) { 
+                    String storedEmail = parts[0].trim(); 
+                    String storedPassword = parts[1].trim(); 
+                    String role = parts[2].trim(); 
+    
                     if (storedEmail.equals(inputEmail) && storedPassword.equals(inputPassword)) {
-                        return role;
+                        return new User(parts[5].trim(), parts[6].trim(), parts[7].trim(),
+                                storedEmail, storedPassword, role, parts[3].trim(), parts[4].trim(),
+                                parts[8].trim());
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    
         return null;
     }
+    
+    
 
-    public boolean register(String newEmail, String newPassword) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(DATABASE_FILE_NAME, true))) {
-            String userRecord = newEmail + "," + newPassword;
-            bw.write(userRecord);
-            bw.newLine();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    // public boolean register(String newEmail, String newPassword) {
+    //     try (BufferedWriter bw = new BufferedWriter(new FileWriter(DATABASE_FILE_NAME, true))) {
+    //         String userRecord = newEmail + "," + newPassword;
+    //         bw.write(userRecord);
+    //         bw.newLine();
+    //         return true;
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         return false;
+    //     }
+    // }
 
-    public static boolean registerUser() {
-        String username = JOptionPane.showInputDialog(null, "Enter a username for registration:");
-        String password = JOptionPane.showInputDialog(null, "Enter a password for registration:");
+    // public static boolean registerUser() {
+    //     String username = JOptionPane.showInputDialog(null, "Enter a username for registration:");
+    //     String password = JOptionPane.showInputDialog(null, "Enter a password for registration:");
 
-        User newUser = new User();
-        return newUser.register(username, password);
-    }
+    //     User newUser = new User();
+    //     return newUser.register(username, password);
+    // }
     
     
 
