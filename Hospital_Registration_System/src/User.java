@@ -164,6 +164,38 @@ public class User {
     
         return null;
     }
+    public static void displayAllUsers() {
+        Vector<User> users = readUsersFromFile();
+
+        if (users.isEmpty()) {
+            System.out.println("No users found.");
+        } else {
+            System.out.printf("%-10s %-20s %-10s %-40s %-10s %-15s %-10s\n",
+                    "Name", "Gender", "Email", "Date of Birth", "Phone Number", "Address", "Registration Date", "Role");
+            System.out.println("===================================================================");
+
+            for (User user : users) {
+                System.out.printf("%-20s %-10s %-30s %-20s %-30s %-40s %-15s %-10s\n",
+                        user.getName(), user.getGender(), user.getEmail(), user.getDateOfBirth(),
+                        user.getPhoneNumber(), user.getAddress(), user.getRegistrationDate(), user.getRole());
+            }
+        }
+    }
+    public static void displayLoggedInUserInfo(User loggedInUser) {
+        //System.out.println("============================================================================================================================================================");
+        System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
+                "Name", "Gender", "Email", "Date of Birth", "Phone Number", "Address", "Registration Date", "Role");
+        System.out.println("============================================================================================================================================================");
+    
+        System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
+                loggedInUser.getName(), loggedInUser.getGender(), loggedInUser.getEmail(),
+                loggedInUser.getDateOfBirth(), loggedInUser.getPhoneNumber(), loggedInUser.getAddress(),
+                loggedInUser.getRegistrationDate(), loggedInUser.getRole());
+    
+        //System.out.println("============================================================================================================================================================\n");
+    }
+    
+    
     
     
 

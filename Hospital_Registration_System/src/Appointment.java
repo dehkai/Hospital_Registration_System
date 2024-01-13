@@ -68,13 +68,16 @@ public class Appointment {
     public void setAppoinmentStatus(String status) {
         this.status = status;
     }
-    public static void clearConsole() {
+    
+    public static void clearConsole(int delayInSeconds) {
         try {
             final String os = System.getProperty("os.name");
-
+    
             if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                new ProcessBuilder("cmd", "/c", "timeout", "/t", String.valueOf(delayInSeconds), "&&", "cls")
+                    .inheritIO().start().waitFor();
             } else {
+                Thread.sleep(delayInSeconds * 1000);
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
             }
@@ -82,10 +85,13 @@ public class Appointment {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        int choice;
-        do {
+    
+    public static void displayUserInterface(){
+        
         Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
         System.out.println("Welcome to Hospital Management System\n");
         System.out.println("1. Register");
         System.out.println("2. Login");
@@ -130,8 +136,9 @@ public class Appointment {
 
                 User.writeUserToFile(newUser);
 
-                clearConsole();
-                System.out.println("\nRegistration successful! Please proceed to login with your email and password.");
+                
+                System.out.println("\nRegistration successful! Please proceed to login with your email and password.\n");
+                clearConsole(3);
                 
                 break;
                 
@@ -143,12 +150,13 @@ public class Appointment {
                 User loginUser = new User();
                 User loggedInUser = loginUser.login(loginEmail, loginPassword);
                 if (loggedInUser != null) {
-                    clearConsole();
-                    System.out.println("Login successful! Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                    System.out.println("\nLogin successful! Your will be redirected to your dashboard in 3 seconds.");
+                    clearConsole(3);
+                    System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                     if (loggedInUser.getRole().equals("Patient")) {
                         //Patient.displayPatientInterface();
-                    } else if (loggedInUser.getRole().equals("doctor")) {
-                        // Handle doctor login
+                    } else if (loggedInUser.getRole().equals("Doctor")) {
+                        Doctor.displayDoctorInterface(loggedInUser);
                     } else if (loggedInUser.getRole().equals("admin")) {
                         // Handle admin login
                     }
@@ -160,10 +168,16 @@ public class Appointment {
                 System.out.println("\nThank you for using Hospital Management System. Goodbye!");
                 System.exit(0);
                 break;
-                
+               
     
     }
+    
     } while (choice != 2 && choice != 3);
+    scanner.close(); 
+    }
+    public static void main(String[] args) {
+        displayUserInterface();
+        
     }
     //     User user = new User();
     //     Console console = System.console();
