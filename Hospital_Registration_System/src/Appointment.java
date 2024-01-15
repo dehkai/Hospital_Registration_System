@@ -103,6 +103,11 @@ public class Appointment {
 
         switch (choice) {
             case 1:
+                System.out.println("Your will be redirected to the registration page in 3 seconds.");
+                clearConsole(3);
+                System.out.println("\n\t\t\tRegister Account");
+                System.out.println("\t\t\t----------------");
+                System.out.println("\nPlease fill in the following details to register an account.");
                 System.out.print("\nEnter your name: ");
                 String name = scanner.nextLine();
                 System.out.print("Enter your email: ");
@@ -143,6 +148,11 @@ public class Appointment {
                 break;
                 
             case 2:
+                System.out.println("Your will be redirected to the login page in 3 seconds.");
+                clearConsole(3);
+                System.out.println("\n\t\tLogin");
+                System.out.println("\t\t-----");
+                System.out.println("\nPlease fill in your email and password to login.");
                 System.out.print("\nEnter your email: ");
                 String loginEmail = scanner.nextLine();
                 char[] passwordArray = System.console().readPassword("Enter your password: ");
@@ -152,13 +162,16 @@ public class Appointment {
                 if (loggedInUser != null) {
                     System.out.println("\nLogin successful! Your will be redirected to your dashboard in 3 seconds.");
                     clearConsole(3);
-                    System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                    
                     if (loggedInUser.getRole().equals("Patient")) {
+                        System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         //Patient.displayPatientInterface();
                     } else if (loggedInUser.getRole().equals("Doctor")) {
+                        System.out.println("Welcome " + "Dr."+loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         Doctor.displayDoctorInterface(loggedInUser);
-                    } else if (loggedInUser.getRole().equals("admin")) {
-                        // Handle admin login
+                    } else if (loggedInUser.getRole().equals("Admin")) {
+                        System.out.println("Welcome " + "Dr."+loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                        Admin.displayAdminInterface(loggedInUser);
                     }
                 } else {
                     System.out.println("Login failed. Invalid credentials.");
@@ -179,65 +192,6 @@ public class Appointment {
         displayUserInterface();
         
     }
-    //     User user = new User();
-    //     Console console = System.console();
-        
-    //     Object[] registerOptions = {"Yes", "No"};
-    //     int registerChoice = JOptionPane.showOptionDialog(
-    //             null,
-    //             "Do you want to register?",
-    //             "Hospital Registration System",
-    //             JOptionPane.YES_NO_OPTION,
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             registerOptions,
-    //             registerOptions[1]
-    //     );
-
-    //     if (registerChoice == JOptionPane.YES_OPTION) {
-    //         boolean registrationSuccess = User.registerUser();
-    //         if (registrationSuccess) {
-    //             JOptionPane.showMessageDialog(null, "Registration successful! You can now log in.");
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Registration failed. Please try again.");
-    //         }
-    //     } else {
-    //         Object[] loginOptions = {"Yes", "No"};
-    //         int loginChoice = JOptionPane.showOptionDialog(
-    //                 null,
-    //                 "Do you want to log in?",
-    //                 "Hospital Registration System",
-    //                 JOptionPane.YES_NO_OPTION,
-    //                 JOptionPane.QUESTION_MESSAGE,
-    //                 null,
-    //                 loginOptions,
-    //                 loginOptions[1]
-    //         );
-
-    //         if (loginChoice == JOptionPane.YES_OPTION) {
-    //             String username = JOptionPane.showInputDialog(null, "Username:", "Enter your username");
-    //             String password = JOptionPane.showInputDialog(null, "Password:", "Enter your password");
-
-    //             String role = user.login(username, password);
-
-            //     if (role != null) {
-            //         console.printf("Login successful! User's role: %s%n", role);
-            //         //JOptionPane.showMessageDialog(null,"Login successful! User's role: " + role);   
-            //         if(role.equals("patient")){
-            //             Patient.displayPatientInterface();
-            //         }else if(role.equals("doctor")){
-                        
-            //         }else if(role.equals("admin")){
-                         
-            //         }
-            //     } else {
-            //         JOptionPane.showMessageDialog(null, "Login failed. Invalid credentials.");
-            //     }
-            // } else {
-            //     JOptionPane.showMessageDialog(null, "Thank you for using Hospital Registration System. Goodbye!");
-            // }
-    //     }
-    // }
     }
 
 

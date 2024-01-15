@@ -4,11 +4,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Doctor extends User {
-    private String department, specialization;
-
-    public Doctor(String department, String specialization) {
+    private String department, specialization, OfficeAddress;
+    
+    public Doctor(String name, String gender, String department, String specialization, String phoneNumber, String OfficeAddress) {
+        super(name, phoneNumber);
         this.department = department;
         this.specialization = specialization;
+        this.OfficeAddress = OfficeAddress;
+    }
+    public Doctor(){
+
     }
 
     public String getDepartment() {
@@ -27,6 +32,14 @@ public class Doctor extends User {
         this.specialization = specialization;
     }
 
+    public String getOfficeAddress() {
+        return OfficeAddress;
+    }
+
+    public void setOfficeAddress(String OfficeAddress) {
+        this.OfficeAddress = OfficeAddress;
+    }
+
     public void viewAppointment(){
 
     }
@@ -41,6 +54,8 @@ public class Doctor extends User {
         int choice;
 
         do{
+        System.out.println("\n\tDoctor Dashboard");
+        System.out.println("\t================");
         System.out.println("\n1. View Personal Information");
         System.out.println("2. Update Personal Information");
         System.out.println("3. View Appointment");

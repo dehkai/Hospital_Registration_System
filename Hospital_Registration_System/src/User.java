@@ -23,6 +23,10 @@ public class User {
         this.registrationDate = registrationDate;
         this.phoneNumber = phoneNumber;
     }
+    public User(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 
     public User(){
 
