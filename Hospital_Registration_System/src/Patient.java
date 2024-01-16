@@ -259,54 +259,94 @@ public class Patient extends User {
     }
     
 
-    public static void requestAppointment(String patientEmail) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Display available doctors from doctorlist.txt
-        System.out.println("\nAvailable Doctors:");
-        System.out.printf("%-25s %-20s %-20s %-30s\n", "Doctor Name", "Department", "Specialization", "Office Address");
-        System.out.println("===========================================================================");
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_LIST_NAME))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 6) {
-                    System.out.printf("%-25s %-20s %-20s %-30s\n", parts[1].trim(), parts[2].trim(), parts[4].trim(), parts[5].trim());
+        public static void requestAppointment(String patientEmail) {
+            Scanner scanner = new Scanner(System.in);
+    
+            // Display available doctors from doctorlist.txt with list numbers
+            System.out.println("\nAvailable Doctors:");
+            System.out.printf("%-5s %-25s %-20s %-20s %-30s\n", "No.", "Doctor Name", "Department", "Specialization", "Office Address");
+            System.out.println("===========================================================================");
+    
+            try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_LIST_NAME))) {
+                String line;
+                int doctorNumber = 1;
+    
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 6) {
+                        System.out.printf("%-5d %-25s %-20s %-20s %-30s\n", doctorNumber, parts[1].trim(), parts[2].trim(), parts[4].trim(), parts[5].trim());
+                        doctorNumber++;
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+    
+            // Patient selects a doctor
+            System.out.print("\nEnter the number of the doctor you want to schedule an appointment with (enter '-' to go back): ");
+            String selectedDoctorNumberInput = scanner.nextLine();
+    
+            // Check if the user wants to go back
+            if (selectedDoctorNumberInput.equals("-")) {
+                System.out.println("\nGoing back to the last page.");
+                return; // Exit the method
+            }
+    
+            try {
+                int selectedDoctorNumber = Integer.parseInt(selectedDoctorNumberInput);
+    
+                // Validate if the entered number corresponds to a valid doctor
+                if (selectedDoctorNumber >= 1) {
+                    String selectedDoctorEmail = getDoctorEmailByNumber(selectedDoctorNumber);
+    
+                    if (selectedDoctorEmail != null) {
+                        // Input date and time for the appointment
+                        System.out.print("Enter the date of the appointment (YYYY-MM-DD): ");
+                        String appointmentDate = scanner.nextLine();
+    
+                        System.out.print("Enter the time of the appointment: ");
+                        String appointmentTime = scanner.nextLine();
+    
+                        // Save appointment details to AppointmentList.txt
+                        try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPOINTMENT_FILE_NAME, true))) {
+                            String appointmentInfo = patientEmail + "," + selectedDoctorEmail + ",Pending," + appointmentDate + "," + appointmentTime;
+                            bw.write(appointmentInfo);
+                            bw.newLine();
+                            System.out.println("\nAppointment requested successfully!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("Invalid input. Going back to the last page.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Going back to the last page.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Going back to the last page.");
+            }
         }
-
-        // Patient selects a doctor
-        System.out.print("\nEnter the name of the doctor you want to schedule an appointment with (enter '-' to go back): ");
-        String selectedDoctor = scanner.nextLine();
-
-        // Check if the user wants to go back
-        if (selectedDoctor.equals("-")) {
-            System.out.println("\nGoing back to the last page.");
-            return; // Exit the method
+    
+        private static String getDoctorEmailByNumber(int doctorNumber) {
+            try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_LIST_NAME))) {
+                String line;
+                int currentDoctorNumber = 1;
+    
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 6) {
+                        if (currentDoctorNumber == doctorNumber) {
+                            return parts[0].trim(); // Doctor's email is at index 0 in doctorlist.txt
+                        }
+                        currentDoctorNumber++;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    
+            return null;
         }
-
-        // Input date and time for the appointment
-        System.out.print("Enter the date of the appointment (YYYY-MM-DD): ");
-        String appointmentDate = scanner.nextLine();
-
-        System.out.print("Enter the time of the appointment: ");
-        String appointmentTime = scanner.nextLine();
-
-        // Save appointment details to AppointmentList.txt
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPOINTMENT_FILE_NAME, true))) {
-            String appointmentInfo = patientEmail + "," + selectedDoctor + ",Pending," + appointmentDate + "," + appointmentTime;
-            bw.write(appointmentInfo);
-            bw.newLine();
-            System.out.println("\nAppointment requested successfully!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }
 
     public static void viewAppointment(String patientEmail) {
         Scanner scanner = new Scanner(System.in);
