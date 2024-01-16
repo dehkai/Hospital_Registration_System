@@ -192,8 +192,7 @@ public class Doctor extends User {
         System.out.println("\t================");
         System.out.println("\n1. View Personal Information");
         System.out.println("2. View Appointment");
-        System.out.println("3. View Available Appointment Slots");
-        System.out.println("4. Logout");
+        System.out.println("3. Logout");
         System.out.print("\nEnter your choice: ");
         choice = scanner.nextInt();
         scanner.nextLine();
@@ -208,9 +207,6 @@ public class Doctor extends User {
                 viewAppointment(email);
                 break;
             case 3:
-                
-                break;
-            case 4:
                 System.out.println("\nThank you for using Hospital Management System. Goodbye!");
                 Appointment.clearConsole(3);
                 Appointment.displayUserInterface();
