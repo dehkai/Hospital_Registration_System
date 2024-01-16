@@ -71,8 +71,8 @@ public class Patient extends User {
 
                                 // Display patient-specific details
                                 //System.out.printf("9. Medical Record Number: %s\n", patientParts[1].trim());
-                                System.out.printf("10. Medical Record: %s\n", patientParts[1].trim());
-                                System.out.printf("11. Insurance Provider: %s\n", patientParts[2].trim());
+                                System.out.printf("9. Medical Record: %s\n", patientParts[1].trim());
+                                System.out.printf("10. Insurance Provider: %s\n", patientParts[2].trim());
                                 break;
                             }
                         }
@@ -229,22 +229,35 @@ public class Patient extends User {
     private static void setPatientField(String email, int field, String value) {
         try (BufferedReader br = new BufferedReader(new FileReader(PATIENT_INFO_FILE));
              BufferedWriter bw = new BufferedWriter(new FileWriter("./Hospital_Registration_System/src/tempPatientInfo.txt"))) {
-
+    
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 4 && parts[0].trim().equals(email)) {
+                if (parts.length == 3 && parts[0].trim().equals(email)) {
                     parts[field] = value;
                     line = String.join(",", parts);
                 }
                 bw.write(line);
                 bw.newLine();
             }
-
+    
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        // Rename the temp file to the original file
+        try {
+            java.nio.file.Files.move(
+                    java.nio.file.Paths.get("./Hospital_Registration_System/src/tempPatientInfo.txt"),
+                    java.nio.file.Paths.get(PATIENT_INFO_FILE),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING
+            );
+            System.out.println("Patient information updated successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
 
     public static void requestAppointment(String patientEmail) {
         Scanner scanner = new Scanner(System.in);

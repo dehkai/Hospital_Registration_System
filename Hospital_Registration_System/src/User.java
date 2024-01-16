@@ -186,9 +186,6 @@ public class User {
         }
     }
 
-    
-
-
     public User login(String inputEmail, String inputPassword) {
         try (BufferedReader br = new BufferedReader(new FileReader(DATABASE_FILE_NAME))) {
             String line;
