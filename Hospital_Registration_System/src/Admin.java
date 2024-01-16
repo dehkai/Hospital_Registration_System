@@ -216,23 +216,256 @@ private static void viewDoctorList(){
         
     }
 
+    //viewAppointment
+    public static void viewAppointment() {
+        Scanner scanner = new Scanner(System.in);
 
-    //viewAppointment()
-    private static void viewAppointment(){
+        // Display the appointment list
+        System.out.println("\nAppointment List:");
+        System.out.printf("%-5s %-25s %-25s %-15s %-10s %-20s %-10s\n", "No.", "Patient Name", "Doctor Name", "Date", "Time", "Status", "Patient Email");
+        System.out.println("===================================================================================");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
+            String line;
+            int appointmentNumber = 1;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    String patientName = getPatientName(parts[0].trim()); // Get patient name from user_credential.txt
+                    String doctorName = getDoctorName(parts[1].trim()); // Get doctor name from doctorlist.txt
+
+                    System.out.printf("%-5d %-25s %-25s %-15s %-10s %-20s %-10s\n",
+                            appointmentNumber, patientName, doctorName, parts[3].trim(), parts[4].trim(), parts[2].trim(), parts[0].trim());
+                    appointmentNumber++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         
+
+        // Prompt the user to select an appointment for detailed information
+        System.out.print("\nEnter the appointment number for detailed information (enter '-' to go back): ");
+        String selectedAppointmentNumberInput = scanner.nextLine();
+
+        if (selectedAppointmentNumberInput.equals("-")) {
+            System.out.println("\nGoing back to the last page.");
+            return; // Exit the method
+        }
+
+        try {
+            int selectedAppointmentNumber = Integer.parseInt(selectedAppointmentNumberInput);
+
+            // Validate if the entered number corresponds to a valid appointment
+            if (selectedAppointmentNumber >= 1 && selectedAppointmentNumber <= getAppointmentCount()) {
+                displayAppointmentDetails(selectedAppointmentNumber);
+            } else {
+                System.out.println("Invalid input. Going back to the last page.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Going back to the last page.");
+        }
+    }
+
+    private static int getAppointmentCount() {
+        int count = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    count++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    private static void displayAppointmentDetails(int appointmentNumber) {
+        try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
+            String line;
+            int currentAppointmentNumber = 1;
+    
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    if (currentAppointmentNumber == appointmentNumber) {
+                        // Display patient information
+                        displayPatientInformation(parts[0].trim());
+    
+                        // Display doctor information
+                        displayDoctorInformation(parts[1].trim());
+    
+                        // Display current appointment status
+                        System.out.printf("\nCurrent Appointment Status: %s\n", parts[2].trim());
+    
+                        // Prompt user to change appointment status
+                        System.out.print("\nEnter the new status (Pending/Approved/Not Approved/Done/Not Done): ");
+                        Scanner scanner = new Scanner(System.in);
+                        String newStatus = scanner.nextLine().trim();
+    
+                        // Validate and update status
+                        if (isValidStatus(newStatus)) {
+                            updateAppointmentStatus(appointmentNumber, newStatus);
+                            System.out.println("Appointment status updated successfully.");
+                        } else {
+                            System.out.println("Invalid status. Appointment status not updated.");
+                        }
+                        return;
+                    }
+                    currentAppointmentNumber++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void updateAppointmentStatus(int appointmentNumber, String newStatus) {
+        List<String> appointmentLines = new ArrayList<>();
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                appointmentLines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        if (appointmentNumber >= 1 && appointmentNumber <= appointmentLines.size()) {
+            String[] parts = appointmentLines.get(appointmentNumber - 1).split(",");
+            if (parts.length == 5) {
+                parts[2] = newStatus; // Update the status
+                appointmentLines.set(appointmentNumber - 1, String.join(",", parts));
+    
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPOINTMENT_FILE_NAME))) {
+                    for (String appointmentLine : appointmentLines) {
+                        bw.write(appointmentLine);
+                        bw.newLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    private static boolean isValidStatus(String status) {
+        return status.equalsIgnoreCase("Pending") || status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("Not Approved") || status.equalsIgnoreCase("Done") || status.equalsIgnoreCase("Not Done");
+    }
+
+    private static String getPatientName(String patientEmail) {
+        try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 12 && parts[0].trim().equals(patientEmail)) {
+                    return parts[5].trim(); // Assuming that the patient's name is at index 5 in user_credential.txt
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Unknown";
+    }
+    
+    private static String getDoctorName(String doctorEmail) {
+        try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6 && parts[0].trim().equals(doctorEmail)) {
+                    return parts[1].trim(); // Assuming that the doctor's name is at index 1 in doctorlist.txt
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Unknown";
+    }
+
+    private static void displayPatientInformation(String patientEmail) {
+        try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 12 && parts[0].trim().equals(patientEmail)) {
+                    // Display patient details
+                    System.out.println("\nPatient Information:");
+                    System.out.printf("1. Name: %s\n", parts[5].trim());
+                    System.out.printf("2. Gender: %s\n", parts[6].trim());
+                    System.out.printf("3. Email: %s\n", parts[0].trim());
+                    System.out.printf("4. Date of Birth: %s\n", parts[3].trim());
+                    System.out.printf("5. Phone Number: %s\n", parts[8].trim());
+                    System.out.printf("6. Address: %s\n", parts[7].trim());
+                    System.out.printf("7. Registration Date: %s\n", parts[4].trim());
+                    System.out.printf("8. Role: %s\n", parts[2].trim());
+
+                    // Fetch and display additional details from patientInfo.txt
+                    displayPatientAdditionalInfo(patientEmail);
+
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayPatientAdditionalInfo(String patientEmail) {
+        try (BufferedReader brPatient = new BufferedReader(new FileReader(PATIENT_INFO_FILE))) {
+            String patientLine;
+
+            while ((patientLine = brPatient.readLine()) != null) {
+                String[] patientParts = patientLine.split(",");
+                if (patientParts.length == 3 && patientParts[0].trim().equals(patientEmail)) {
+                    // Display patient-specific details
+                    System.out.printf("9. Medical Record: %s\n", patientParts[1].trim());
+                    System.out.printf("10. Insurance Provider: %s\n", patientParts[2].trim());
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayDoctorInformation(String doctorEmail) {
+        try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_FILE_NAME))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6 && parts[0].trim().equals(doctorEmail)) {
+                    // Display doctor details
+                    System.out.println("\nDoctor Information:");
+                    System.out.printf("1. Name: %s\n", parts[1].trim());
+                    System.out.printf("2. Department: %s\n", parts[2].trim());
+                    System.out.printf("3. Email: %s\n", parts[0].trim());
+                    System.out.printf("4. Date of Birth: %s\n", parts[3].trim());
+                    System.out.printf("5. Phone Number: %s\n", parts[5].trim());
+                    System.out.printf("6. Address: %s\n", parts[4].trim());
+                    System.out.printf("7. Specialization: %s\n", parts[4].trim());
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    //admitPatient
-    private static void admitPatient(){
-        
-    }
+    
+
+    
 
 
-    //dischargePatient()
-    private static void dischargePatient(){
-        
-    }
 
 
 
@@ -285,11 +518,11 @@ private static void viewDoctorList(){
                     break;
 
                 case 5:
-                    admitPatient();
+                    
                     break;
 
                 case 6:
-                    dischargePatient();
+                    
                     break;
 
                 case 7:
