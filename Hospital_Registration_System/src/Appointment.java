@@ -14,26 +14,37 @@ import java.io.FileWriter;
 
 public class Appointment {
 
-    private String AppointmentId, status;
-    private Date date;
+    private String patientEmail, doctorEmail, status, date, time;
+    // private Date date;
     private Patient patient;
-    private Time time;
+    // private Time time;
     private static final String PATIENT_INFO_FILE = "./Hospital_Registration_System/src/patientInfo.txt";
+    private static final String MEDICAL_RECORD_FILE = "./Hospital_Registration_System/src/MedicalRecord.txt";
+    
 
-    public Appointment(String AppointmentId, String status, Date date, Patient patient, Time time) {
-        this.AppointmentId = AppointmentId;
+    public Appointment(String patientEmail, String doctorEmail, String status, String date, String time) {
+        this.patientEmail = patientEmail;
+        this.doctorEmail = doctorEmail;
         this.status = status;
         this.date = date;
-        this.patient = patient;
         this.time = time;
     }
 
-    public String getAppointmentId() {
-        return AppointmentId;
+
+    public String getPatientEmail() {
+        return patientEmail;
     }
 
-    public void setAppointmentId(String AppointmentId) {
-        this.AppointmentId = AppointmentId;
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
+    }
+
+    public String getDoctorEmail() {
+        return doctorEmail;
+    }
+
+    public void setDoctorEmail(String doctorEmail) {
+        this.doctorEmail = doctorEmail;
     }
 
     public String getStatus() {
@@ -44,11 +55,11 @@ public class Appointment {
         this.status = status;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -60,12 +71,17 @@ public class Appointment {
         this.patient = patient;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDateTime() {
+        // Combine date and time strings and return a representation suitable for sorting
+        return date + " " + time;
     }
 
     public String getAppoinmentStatus() {
@@ -80,17 +96,30 @@ public class Appointment {
         // Placeholder method for user registration
 
         // Assume the user is a patient for simplicity
-        Patient patient = new Patient("email", "-", "-", "-");
+        Patient patient = new Patient("email", "-", "-");
 
         // Save patient information to patientInfo.txt
         writePatientInfoToFile(patient, email);
+
+        // Save medical record information to MedicalRecord.txt
+        writeMedicalRecordToFile(email, "-");
     }
 
     private static void writePatientInfoToFile(Patient patient, String email) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATIENT_INFO_FILE, true))) {
-            String patientInfo = email + "," + patient.getMedicalRecordNumber() + ","
+            String patientInfo = email + ","
                     + patient.getMedicalRecord() + "," + patient.getInsuranceProvider();
             bw.write(patientInfo);
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeMedicalRecordToFile(String email, String medicalRecord) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(MEDICAL_RECORD_FILE, true))) {
+            String medicalRecordInfo = email + "," + medicalRecord;
+            bw.write(medicalRecordInfo);
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -176,7 +205,7 @@ public class Appointment {
                 
                 break;
                 
-            case 2:
+                case 2:
                 System.out.println("Your will be redirected to the login page in 3 seconds.");
                 clearConsole(3);
                 System.out.println("\n\t\tLogin");
@@ -188,34 +217,36 @@ public class Appointment {
                 String loginPassword = new String(passwordArray);
                 User loginUser = new User();
                 User loggedInUser = loginUser.login(loginEmail, loginPassword);
+
                 if (loggedInUser != null) {
                     System.out.println("\nLogin successful! Your will be redirected to your dashboard in 3 seconds.");
                     clearConsole(3);
-                    
+
                     if (loggedInUser.getRole().equals("Patient")) {
                         System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        Patient.displayPatientInterface(loginEmail);
+                        Patient.displayPatientInterface(loginEmail, loggedInUser);
                     } else if (loggedInUser.getRole().equals("Doctor")) {
-                        System.out.println("Welcome " + "Dr."+loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        Doctor.displayDoctorInterface(loggedInUser);
+                        System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                        Doctor.displayDoctorInterface(loginEmail, loggedInUser);
                     } else if (loggedInUser.getRole().equals("Admin")) {
-                        System.out.println("Welcome " + "Dr."+loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                        System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         Admin.displayAdminInterface(loggedInUser);
                     }
                 } else {
-                    System.out.println("Login failed. Invalid credentials.");
+                    System.out.println("Login failed. Press any key to go back to the main menu.");
+                    scanner.next(); // Wait for any key input
                 }
                 break;
+
             case 3:
                 System.out.println("\nThank you for using Hospital Management System. Goodbye!");
-                System.exit(0);
-                break;
+                break; // No need to exit the program here
+        }
                
     
     }
-    
-    } while (choice != 2 && choice != 3);
-    scanner.close(); 
+    while (choice != 3);
+    scanner.close();
     }
     public static void main(String[] args) throws FileNotFoundException, IOException   {
 
