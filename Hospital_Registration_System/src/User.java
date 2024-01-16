@@ -1,11 +1,5 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
-import java.time.format.DateTimeFormatter;
-import javax.swing.JOptionPane;
+import java.util.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 
 public class User {
     private String name, gender, address, email, password, role, dateOfBirth, registrationDate, phoneNumber, department, specialization, OfficeAddress;
@@ -228,18 +222,50 @@ public class User {
             }
         }
     }
-    public static void displayLoggedInUserInfo(User loggedInUser) {
-        //System.out.println("============================================================================================================================================================");
-        System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
-                "Name", "Gender", "Email", "Date of Birth", "Phone Number", "Address", "Registration Date", "Role");
-        System.out.println("============================================================================================================================================================");
+    // public static void displayLoggedInUserInfo(User loggedInUser) {
+    //     System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
+    //             "Name", "Gender", "Email", "Date of Birth", "Phone Number", "Address", "Registration Date", "Role");
+    //     System.out.println("============================================================================================================================================================");
     
-        System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
-                loggedInUser.getName(), loggedInUser.getGender(), loggedInUser.getEmail(),
-                loggedInUser.getDateOfBirth(), loggedInUser.getPhoneNumber(), loggedInUser.getAddress(),
-                loggedInUser.getRegistrationDate(), loggedInUser.getRole());
+    //     System.out.printf("| %-15s | %-10s | %-20s | %-14s | %-15s | %-30s | %-17s | %-10s |\n",
+    //             loggedInUser.getName(), loggedInUser.getGender(), loggedInUser.getEmail(),
+    //             loggedInUser.getDateOfBirth(), loggedInUser.getPhoneNumber(), loggedInUser.getAddress(),
+    //             loggedInUser.getRegistrationDate(), loggedInUser.getRole());
+        
     
-        //System.out.println("============================================================================================================================================================\n");
+    //     //System.out.println("============================================================================================================================================================\n");
+    // }
+
+    public static void setUserField(String email, int field, String value) {
+        try (BufferedReader br = new BufferedReader(new FileReader(DATABASE_FILE_NAME));
+             BufferedWriter bw = new BufferedWriter(new FileWriter("./Hospital_Registration_System/src/tempUser_credential.txt"))) {
+    
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 12 && parts[0].trim().equals(email)) {
+                    parts[field] = value;
+                    line = String.join(",", parts);
+                }
+                bw.write(line);
+                bw.newLine();
+            }
+    
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        // Rename the temp file to the original file
+        try {
+            java.nio.file.Files.move(
+                    java.nio.file.Paths.get("./Hospital_Registration_System/src/tempUser_credential.txt"),
+                    java.nio.file.Paths.get(DATABASE_FILE_NAME),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING
+            );
+            System.out.println("User information updated successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
 
