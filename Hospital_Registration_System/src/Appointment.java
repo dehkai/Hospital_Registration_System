@@ -229,7 +229,7 @@ public class Appointment {
                         System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         Doctor.displayDoctorInterface(loginEmail, loggedInUser);
                     } else if (loggedInUser.getRole().equals("Admin")) {
-                        System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                        System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         Admin.displayAdminInterface(loggedInUser);
                     }
                 } else {
@@ -246,7 +246,7 @@ public class Appointment {
     
     }
     while (choice != 3);
-    scanner.close();
+    //scanner.close();
     }
     public static void main(String[] args) throws FileNotFoundException, IOException   {
 

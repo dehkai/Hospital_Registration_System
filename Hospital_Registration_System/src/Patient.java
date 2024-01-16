@@ -415,7 +415,7 @@ public class Patient extends User {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 6 && parts[1].trim().equals(doctorEmail)) {
+                if (parts.length == 6 && parts[0].trim().equals(doctorEmail)) {
                     return parts[1].trim(); // Assuming that the doctor's name is at index 1 in doctorlist.txt
                 }
             }
