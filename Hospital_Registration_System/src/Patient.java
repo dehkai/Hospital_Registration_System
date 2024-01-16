@@ -1,10 +1,5 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Patient extends User {
     private String email, medicalRecord, InsuranceProvider;
@@ -178,7 +173,7 @@ public class Patient extends User {
                     break;
 
                 default:
-                    System.out.println("Invalid choice. Please enter a number between 0 and 11.");
+                    System.out.println("Invalid choice. Please enter a number between 0 and 10.");
             }
 
             System.out.print("Do you want to continue updating? (1: Yes, 0: No): ");
@@ -193,37 +188,6 @@ public class Patient extends User {
 
     }
 
-    private static void setUserField(String email, int field, String value) {
-        try (BufferedReader br = new BufferedReader(new FileReader(DATABASE_FILE_NAME));
-             BufferedWriter bw = new BufferedWriter(new FileWriter("./Hospital_Registration_System/src/tempUser_credential.txt"))) {
-    
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 12 && parts[0].trim().equals(email)) {
-                    parts[field] = value;
-                    line = String.join(",", parts);
-                }
-                bw.write(line);
-                bw.newLine();
-            }
-    
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    
-        // Rename the temp file to the original file
-        try {
-            java.nio.file.Files.move(
-                    java.nio.file.Paths.get("./Hospital_Registration_System/src/tempUser_credential.txt"),
-                    java.nio.file.Paths.get(DATABASE_FILE_NAME),
-                    java.nio.file.StandardCopyOption.REPLACE_EXISTING
-            );
-            System.out.println("User information updated successfully!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     
 
     private static void setPatientField(String email, int field, String value) {
