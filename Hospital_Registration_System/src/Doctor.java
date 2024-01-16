@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -6,7 +8,7 @@ import java.util.Scanner;
 public class Doctor extends User {
     private String department, specialization, OfficeAddress;
     
-    public Doctor(String name, String gender, String department, String specialization, String phoneNumber, String OfficeAddress) {
+    public Doctor(String email, String name, String gender, String department, String specialization, String phoneNumber, String OfficeAddress) {
         super(name, phoneNumber);
         this.department = department;
         this.specialization = specialization;
@@ -49,7 +51,7 @@ public class Doctor extends User {
         
     }
 
-    public static void displayDoctorInterface(User loggedInUser){
+    public static void displayDoctorInterface(User loggedInUser) throws FileNotFoundException, IOException{
         Scanner scanner = new Scanner(System.in);
         int choice;
 

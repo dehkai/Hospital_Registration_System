@@ -8,9 +8,10 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 
 public class User {
-    private String name, gender, address, email, password, role, dateOfBirth, registrationDate, phoneNumber;
-    private static final String DATABASE_FILE_NAME = "src/user_credential.txt";
+    private String name, gender, address, email, password, role, dateOfBirth, registrationDate, phoneNumber, department, specialization, OfficeAddress;
+    private static final String DATABASE_FILE_NAME = "./Hospital_Registration_System/src/user_credential.txt";
 
+    //for normal user
     public User(String name, String gender, String address, String email, String password, String role, String dateOfBirth, String registrationDate, String phoneNumber) {
         
         this.name = name;
@@ -23,6 +24,24 @@ public class User {
         this.registrationDate = registrationDate;
         this.phoneNumber = phoneNumber;
     }
+
+    //for doctor
+    public User(String name, String gender, String address, String email, String password, String role, String dateOfBirth, String registrationDate, String phoneNumber, String department, String specialization, String OfficeAddress) {
+        
+        this.name = name;
+        this.gender = gender;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.dateOfBirth = dateOfBirth;
+        this.registrationDate = registrationDate;
+        this.phoneNumber = phoneNumber;
+        this.department = department;
+        this.specialization = specialization;
+        this.OfficeAddress = OfficeAddress;
+    }
+
     public User(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -68,6 +87,17 @@ public class User {
         return phoneNumber;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public String getOfficeAddress() {
+        return OfficeAddress;
+    }
     
     public void setName(String name) {
         this.name = name;
@@ -104,6 +134,18 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public void setOfficeAddress(String OfficeAddress) {
+        this.OfficeAddress = OfficeAddress;
+    }
     
     protected void updateUser(){
 
@@ -136,7 +178,7 @@ public class User {
             String userRecord = user.getEmail() + "," + user.getPassword() + "," + user.getRole() + ","
                     + user.getDateOfBirth() + "," + user.getRegistrationDate()
                     + "," + user.getName() + "," + user.getGender() + ","
-                    + user.getAddress() + "," + user.getPhoneNumber();
+                    + user.getAddress() + "," + user.getPhoneNumber() + ",-,-,-";
             bw.write(userRecord);
             bw.newLine();
         } catch (IOException e) {
@@ -144,17 +186,19 @@ public class User {
         }
     }
 
+    
+
 
     public User login(String inputEmail, String inputPassword) {
         try (BufferedReader br = new BufferedReader(new FileReader(DATABASE_FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 9) { 
+                if (parts.length == 12) { 
                     String storedEmail = parts[0].trim(); 
                     String storedPassword = parts[1].trim(); 
                     String role = parts[2].trim(); 
-    
+
                     if (storedEmail.equals(inputEmail) && storedPassword.equals(inputPassword)) {
                         return new User(parts[5].trim(), parts[6].trim(), parts[7].trim(),
                                 storedEmail, storedPassword, role, parts[3].trim(), parts[4].trim(),
@@ -168,6 +212,8 @@ public class User {
     
         return null;
     }
+    
+
     public static void displayAllUsers() {
         Vector<User> users = readUsersFromFile();
 
@@ -198,31 +244,6 @@ public class User {
     
         //System.out.println("============================================================================================================================================================\n");
     }
-    
-    
-    
-    
-
-    // public boolean register(String newEmail, String newPassword) {
-    //     try (BufferedWriter bw = new BufferedWriter(new FileWriter(DATABASE_FILE_NAME, true))) {
-    //         String userRecord = newEmail + "," + newPassword;
-    //         bw.write(userRecord);
-    //         bw.newLine();
-    //         return true;
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         return false;
-    //     }
-    // }
-
-    // public static boolean registerUser() {
-    //     String username = JOptionPane.showInputDialog(null, "Enter a username for registration:");
-    //     String password = JOptionPane.showInputDialog(null, "Enter a password for registration:");
-
-    //     User newUser = new User();
-    //     return newUser.register(username, password);
-    // }
-    
     
 
 }

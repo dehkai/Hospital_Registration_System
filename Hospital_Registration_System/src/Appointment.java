@@ -4,7 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.Console;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class Appointment {
 
@@ -12,6 +18,7 @@ public class Appointment {
     private Date date;
     private Patient patient;
     private Time time;
+    private static final String PATIENT_INFO_FILE = "./Hospital_Registration_System/src/patientInfo.txt";
 
     public Appointment(String AppointmentId, String status, Date date, Patient patient, Time time) {
         this.AppointmentId = AppointmentId;
@@ -68,6 +75,27 @@ public class Appointment {
     public void setAppoinmentStatus(String status) {
         this.status = status;
     }
+
+    public static void registerUser(String email) {
+        // Placeholder method for user registration
+
+        // Assume the user is a patient for simplicity
+        Patient patient = new Patient("email", "-", "-", "-");
+
+        // Save patient information to patientInfo.txt
+        writePatientInfoToFile(patient, email);
+    }
+
+    private static void writePatientInfoToFile(Patient patient, String email) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATIENT_INFO_FILE, true))) {
+            String patientInfo = email + "," + patient.getMedicalRecordNumber() + ","
+                    + patient.getMedicalRecord() + "," + patient.getInsuranceProvider();
+            bw.write(patientInfo);
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
     public static void clearConsole(int delayInSeconds) {
         try {
@@ -86,7 +114,7 @@ public class Appointment {
         }
     }
     
-    public static void displayUserInterface(){
+    public static void displayUserInterface() throws FileNotFoundException, IOException{
         
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -140,6 +168,7 @@ public class Appointment {
                 newUser.setRole("Patient");
 
                 User.writeUserToFile(newUser);
+                registerUser(email);
 
                 
                 System.out.println("\nRegistration successful! Please proceed to login with your email and password.\n");
@@ -165,7 +194,7 @@ public class Appointment {
                     
                     if (loggedInUser.getRole().equals("Patient")) {
                         System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        //Patient.displayPatientInterface();
+                        Patient.displayPatientInterface(loginEmail);
                     } else if (loggedInUser.getRole().equals("Doctor")) {
                         System.out.println("Welcome " + "Dr."+loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
                         Doctor.displayDoctorInterface(loggedInUser);
@@ -188,11 +217,17 @@ public class Appointment {
     } while (choice != 2 && choice != 3);
     scanner.close(); 
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException   {
+
         displayUserInterface();
         
     }
-    }
+
+    
+    
+
+    
+}
 
 
     
