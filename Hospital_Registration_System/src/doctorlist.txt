@@ -1,2 +1,4 @@
 ydk1421@gmail.com,Yap Soon Fook,601159908615,Surgery,Neurosurgery,P19-111
 tanwoonzhe@gmail.com,Tan Woon,1140242394,Surgery,Skin Care,P20-11
+jameswan@gmail.com,James Wan,601167543219,Internal Medicine,Cardiology,N28a-311
+alextan@gmail.com,Alex Tan,6011766537368,Pathology,Clinical Pathology,P11-234
