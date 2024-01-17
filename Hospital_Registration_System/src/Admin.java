@@ -1,4 +1,7 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -92,8 +95,8 @@ public class Admin extends User {
              BufferedWriter bw = new BufferedWriter(new FileWriter("tempDoctorList.txt"))) {
     
             System.out.println("\nDoctor List:");
-            System.out.printf("%-5s %-30s %-20s %-15s %-20s %-20s %-30s\n", "No.", "Name", "Email", "Phone Number", "Department", "Specialization", "Office Address");
-            System.out.println("===================================================================================");
+            System.out.printf("%-5s %-20s %-25s %-15s %-20s %-20s %-30s\n", "No.", "Name", "Email", "Phone Number", "Department", "Specialization", "Office Address");
+            System.out.println("=============================================================================================================================");
     
             List<String> doctorList = new ArrayList<>();
             String line;
@@ -108,7 +111,7 @@ public class Admin extends User {
                 String specialization = doctorInfo[4];
                 String officeAddress = doctorInfo[5];
     
-                System.out.printf("%-5d %-30s %-20s %-15s %-20s %-20s %-30s\n",
+                System.out.printf("%-5d %-20s %-25s %-15s %-20s %-20s %-30s\n",
                         doctorNumber, name, email, phoneNumber, department, specialization, officeAddress);
                 doctorList.add(line);
                 doctorNumber++;
@@ -200,11 +203,21 @@ public class Admin extends User {
         File tempFile = new File("tempUserList.txt");
         File originalFile = new File(USER_FILE_NAME);
     
-        if (tempFile.renameTo(originalFile)) {
+        // if (tempFile.renameTo(originalFile)) {
+        //     return userRemoved;
+        // } else {
+        //     return false;
+        // }
+        try {
+            Path sourcePath = tempFile.toPath();
+            Path destinationPath = originalFile.toPath();
+            Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
             return userRemoved;
-        } else {
+        } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
+
     }
     
     
@@ -681,8 +694,8 @@ private static void viewDoctorList(){
     
     
     private static void displayAdmittedPatients() {
-        System.out.printf("%-5s %-20s %-20s %-15s %-10s %-10s %-10s\n", "No.", "Patient Name", "Doctor Name", "Sickness", "Room Number", "Status", "Identity Card Number");
-        System.out.println("===================================================================================");
+        System.out.printf("%-5s %-20s %-15s %-15s %-15s %-10s %-10s\n", "No.", "Patient Name", "Doctor Name", "Sickness", "Room Number", "Status", "Identity Card Number");
+        System.out.println("==========================================================================================================");
     
         try (BufferedReader br = new BufferedReader(new FileReader(PATIENT_RECORD_FILE))) {
             String line;
@@ -691,7 +704,7 @@ private static void viewDoctorList(){
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) {
-                    System.out.printf("%-5d %-20s %-20s %-15s %-10s %-10s %-10s\n",
+                    System.out.printf("%-5d %-20s %-15s %-15s %-15s %-10s %-10s\n",
                             patientNumber, parts[0], parts[2], parts[3], parts[4], parts[5], parts[1]);
                     patientNumber++;
                 }
@@ -780,8 +793,8 @@ private static void viewDoctorList(){
 
         // Display the list of users (patients and doctors)
         System.out.println("\nUser List:");
-        System.out.printf("%-5s %-25s %-20s %-10s %-20s %-15s %-15s %-15s\n", "No.", "User Name", "Email", "Role", "Gender", "Date of Birth", "Registration Date", "Phone Number");
-        System.out.println("===============================================================================");
+        System.out.printf("%-5s %-25s %-20s %-10s %-10s %-15s %-20s %-15s\n", "No.", "User Name", "Email", "Role", "Gender", "Date of Birth", "Registration Date", "Phone Number");
+        System.out.println("============================================================================================================================");
 
         try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME))) {
             String line;
@@ -792,7 +805,7 @@ private static void viewDoctorList(){
                 if (parts.length == 12) {
                     String role = parts[2].trim();
                     if (role.equalsIgnoreCase("Patient") || role.equalsIgnoreCase("Doctor")) {
-                        System.out.printf("%-5d %-25s %-20s %-10s %-20s %-15s %-15s %-15s\n",
+                        System.out.printf("%-5d %-25s %-20s %-10s %-10s %-15s %-20s %-15s\n",
                                 userNumber, parts[5].trim(), parts[0].trim(), role, parts[6].trim(), parts[3].trim(), parts[4].trim(), parts[8].trim());
                         userNumber++;
                     }
@@ -1003,7 +1016,7 @@ private static void viewDoctorList(){
 
 
     public static void displayAdminInterface(User loggedInUser) throws FileNotFoundException, IOException {
-        System.out.println("loggedInUser:" + loggedInUser);
+        //System.out.println("loggedInUser:" + loggedInUser);
         int choice;
         Scanner scanner = new Scanner(System.in);
 
