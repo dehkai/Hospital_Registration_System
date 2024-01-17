@@ -685,7 +685,7 @@ public class Admin extends User {
     ///cant save updated data
     private static void updatePatientRecord(String oldRecord, String newRecord) {
         try (BufferedReader br = new BufferedReader(new FileReader(PATIENT_RECORD_FILE));
-             BufferedWriter bw = new BufferedWriter(new FileWriter(PATIENT_RECORD_FILE))) {
+             BufferedWriter bw = new BufferedWriter(new FileWriter("tempPatientRecord.txt"))) {
     
             String line;
             while ((line = br.readLine()) != null) {
@@ -700,14 +700,25 @@ public class Admin extends User {
             e.printStackTrace();
         }
     
-        // Rename the temporary file to the original file
-        File tempFile = new File("tempPatientRecord.txt");
         File originalFile = new File(PATIENT_RECORD_FILE);
+        if (!originalFile.delete()) {
+            System.out.println("Error updating patient record. Please try again.");
+            return;
+        }
+        File tempFile = new File("tempPatientRecord.txt");
         if (tempFile.renameTo(originalFile)) {
             System.out.println("Patient record updated successfully.");
         } else {
             System.out.println("Error updating patient record. Please try again.");
         }
+        // Rename the temporary file to the original file
+        // File tempFile = new File("tempPatientRecord.txt");
+        // File originalFile = new File(PATIENT_RECORD_FILE);
+        // if (tempFile.renameTo(originalFile)) {
+        //     System.out.println("Patient record updated successfully.");
+        // } else {
+        //     System.out.println("Error updating patient record. Please try again.");
+        // }
     }
     
     

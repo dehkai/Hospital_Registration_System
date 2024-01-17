@@ -1,1 +1,2 @@
-tan,24323,tan1,gaegea,A305,admitted
+Ali bin Abu,010831-01-1235,Tan Woon Zhe,Flu,B805,admitted
+Jamond,020909-01-1421,Morgan Steward,Dengue,A301,discharged

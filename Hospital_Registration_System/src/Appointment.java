@@ -141,101 +141,107 @@ public class Appointment {
         int choice;
 
         do {
-        System.out.println("Welcome to Hospital Management System\n");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("3. Quit");
-        System.out.print("\nChoose an option (1-3): ");
+            try {    
+                System.out.println("Welcome to Hospital Management System\n");
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+                System.out.println("3. Quit");
+                System.out.print("\nChoose an option (1-3): ");
 
-        choice = scanner.nextInt();
-        scanner.nextLine();
+                choice = scanner.nextInt();
+                scanner.nextLine();
 
-        switch (choice) {
-            case 1:
-                System.out.println("Your will be redirected to the registration page in 3 seconds.");
-                clearConsole(3);
-                System.out.println("\n\t\t\tRegister Account");
-                System.out.println("\t\t\t----------------");
-                System.out.println("\nPlease fill in the following details to register an account.");
-                System.out.print("\nEnter your name: ");
-                String name = scanner.nextLine();
-                System.out.print("Enter your email: ");
-                String email = scanner.nextLine();
-                System.out.print("Enter your password: ");
-                String password = scanner.nextLine();
-                System.out.print("Enter your gender (MALE/FEMALE): ");
-                String gender = scanner.nextLine();
-                System.out.print("Enter your address: ");
-                String address = scanner.nextLine();
-                System.out.print("Enter your phone number (Start with 60): ");
-                String phoneNumber = scanner.nextLine();
-                System.out.print("Enter your date of birth (YYYY-MM-DD): ");
-                String dateOfBirth = scanner.nextLine();
-                LocalDate registrationDate = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                String formattedRegistrationDate = registrationDate.format(formatter);
+                switch (choice) {
+                    case 1:
+                        System.out.println("Your will be redirected to the registration page in 3 seconds.");
+                        clearConsole(3);
+                        System.out.println("\n\t\t\tRegister Account");
+                        System.out.println("\t\t\t----------------");
+                        System.out.println("\nPlease fill in the following details to register an account.");
+                        System.out.print("\nEnter your name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter your email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Enter your password: ");
+                        String password = scanner.nextLine();
+                        System.out.print("Enter your gender (MALE/FEMALE): ");
+                        String gender = scanner.nextLine();
+                        System.out.print("Enter your address: ");
+                        String address = scanner.nextLine();
+                        System.out.print("Enter your phone number (Start with 60): ");
+                        String phoneNumber = scanner.nextLine();
+                        System.out.print("Enter your date of birth (YYYY-MM-DD): ");
+                        String dateOfBirth = scanner.nextLine();
+                        LocalDate registrationDate = LocalDate.now();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String formattedRegistrationDate = registrationDate.format(formatter);
 
-                User newUser = new User();
-                
-                newUser.setName(name);
-                newUser.setEmail(email);
-                newUser.setPassword(password);
-                newUser.setEmail(email);
-                newUser.setAddress(address);
-                newUser.setGender(gender);
-                newUser.setPhoneNumber(phoneNumber);
-                newUser.setDateOfBirth(dateOfBirth);
-                newUser.setRegistrationDate(formattedRegistrationDate);
-                newUser.setRole("Patient");
+                        User newUser = new User();
+                        
+                        newUser.setName(name);
+                        newUser.setEmail(email);
+                        newUser.setPassword(password);
+                        newUser.setEmail(email);
+                        newUser.setAddress(address);
+                        newUser.setGender(gender);
+                        newUser.setPhoneNumber(phoneNumber);
+                        newUser.setDateOfBirth(dateOfBirth);
+                        newUser.setRegistrationDate(formattedRegistrationDate);
+                        newUser.setRole("Patient");
 
-                User.writeUserToFile(newUser);
-                registerUser(email);
+                        User.writeUserToFile(newUser);
+                        registerUser(email);
 
-                
-                System.out.println("\nRegistration successful! Please proceed to login with your email and password.\n");
-                clearConsole(3);
-                
-                break;
-                
-                case 2:
-                System.out.println("Your will be redirected to the login page in 3 seconds.");
-                clearConsole(3);
-                System.out.println("\n\t\tLogin");
-                System.out.println("\t\t-----");
-                System.out.println("\nPlease fill in your email and password to login.");
-                System.out.print("\nEnter your email: ");
-                String loginEmail = scanner.nextLine();
-                char[] passwordArray = System.console().readPassword("Enter your password: ");
-                String loginPassword = new String(passwordArray);
-                User loginUser = new User();
-                User loggedInUser = loginUser.login(loginEmail, loginPassword);
+                        
+                        System.out.println("\nRegistration successful! Please proceed to login with your email and password.\n");
+                        clearConsole(3);
+                        
+                        break;
+                        
+                    case 2:
+                        System.out.println("Your will be redirected to the login page in 3 seconds.");
+                        clearConsole(3);
+                        System.out.println("\n\t\tLogin");
+                        System.out.println("\t\t-----");
+                        System.out.println("\nPlease fill in your email and password to login.");
+                        System.out.print("\nEnter your email: ");
+                        String loginEmail = scanner.nextLine();
+                        char[] passwordArray = System.console().readPassword("Enter your password: ");
+                        String loginPassword = new String(passwordArray);
+                        User loginUser = new User();
+                        User loggedInUser = loginUser.login(loginEmail, loginPassword);
 
-                if (loggedInUser != null) {
-                    System.out.println("\nLogin successful! Your will be redirected to your dashboard in 3 seconds.");
-                    clearConsole(3);
+                        if (loggedInUser != null) {
+                            System.out.println("\nLogin successful! Your will be redirected to your dashboard in 3 seconds.");
+                            clearConsole(3);
 
-                    if (loggedInUser.getRole().equals("Patient")) {
-                        System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        Patient.displayPatientInterface(loginEmail, loggedInUser);
-                    } else if (loggedInUser.getRole().equals("Doctor")) {
-                        System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        Doctor.displayDoctorInterface(loginEmail, loggedInUser);
-                    } else if (loggedInUser.getRole().equals("Admin")) {
-                        System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
-                        Admin.displayAdminInterface(loggedInUser);
-                    }
-                } else {
-                    System.out.println("Login failed. Press any key to go back to the main menu.");
-                    scanner.next(); // Wait for any key input
+                            if (loggedInUser.getRole().equals("Patient")) {
+                                System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                                Patient.displayPatientInterface(loginEmail, loggedInUser);
+                            } else if (loggedInUser.getRole().equals("Doctor")) {
+                                System.out.println("Welcome " + "Dr." + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                                Doctor.displayDoctorInterface(loginEmail, loggedInUser);
+                            } else if (loggedInUser.getRole().equals("Admin")) {
+                                System.out.println("Welcome " + loggedInUser.getName() + ". User's role: " + loggedInUser.getRole());
+                                Admin.displayAdminInterface(loggedInUser);
+                            }
+                        } else {
+                            System.out.println("Login failed. Press any key to go back to the main menu.");
+                            scanner.nextLine(); // Wait for any key input
+                        }
+                        break;
+
+                    case 3:
+                        System.out.println("\nThank you for using Hospital Management System. Goodbye!");
+                        break; // No need to exit the program here
+                    default:
+                        throw new InputMismatchException("Invalid choice. Please enter 1, 2, or 3.");
                 }
-                break;
-
-            case 3:
-                System.out.println("\nThank you for using Hospital Management System. Goodbye!");
-                break; // No need to exit the program here
-        }
-               
-    
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Consume the invalid input
+                choice = 0; // Reset choice to continue the loop
+            }
     }
     while (choice != 3);
     //scanner.close();

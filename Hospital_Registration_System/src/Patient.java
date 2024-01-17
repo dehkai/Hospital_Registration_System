@@ -568,7 +568,7 @@ public class Patient extends User {
 
     //error, save in temp txt
     public static void displayPatientInterface(String email, User loggedInUser ) throws FileNotFoundException, IOException{
-        System.out.println("email: " + email);
+        //System.out.println("Email: " + email);
         int choice;
         Scanner scanner = new Scanner(System.in);
 
