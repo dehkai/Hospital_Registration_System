@@ -953,17 +953,17 @@ public class Admin extends User {
 
     private static void changeMedicalReport(String patientEmail) {
         // Prompt the user to change the medical report
-        System.out.print("\nDo you want to change the medical report for this patient? (yes/no): ");
+        System.out.print("\nDo you want to change the medical record for this patient? (yes/no): ");
         Scanner scanner = new Scanner(System.in);
         String response = scanner.nextLine().trim().toLowerCase();
 
         if (response.equals("yes")) {
             // Fetch current medical report
             String currentMedicalReport = getCurrentMedicalReport(patientEmail);
-            System.out.printf("\nCurrent Medical Report: %s\n", currentMedicalReport);
+            System.out.printf("\nCurrent Medical Record: %s\n", currentMedicalReport);
 
             // Prompt user for the new medical report
-            System.out.print("Enter the new medical report: ");
+            System.out.print("Enter the new medical record: ");
             String newMedicalReport = scanner.nextLine().trim();
 
             // Update medical report in patientInfo.txt

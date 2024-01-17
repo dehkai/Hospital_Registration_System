@@ -229,7 +229,7 @@ public class Patient extends User {
             // Display available doctors from doctorlist.txt with list numbers
             System.out.println("\nAvailable Doctors:");
             System.out.printf("%-5s %-25s %-20s %-20s %-30s\n", "No.", "Doctor Name", "Department", "Specialization", "Office Address");
-            System.out.println("===========================================================================");
+            System.out.println("========================================================================================");
     
             try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_LIST_NAME))) {
                 String line;
@@ -318,7 +318,7 @@ public class Patient extends User {
         // Display the user's current appointments
         System.out.println("\nYour Appointments:");
         System.out.printf("%-5s %-25s %-15s %-10s %-20s %-10s\n", "No.", "Doctor Name", "Date", "Time", "Status", "Doctor Email");
-        System.out.println("===============================================================================");
+        System.out.println("============================================================================================");
 
         try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
             String line;
@@ -574,7 +574,7 @@ public class Patient extends User {
 
         do{
         System.out.println("\n\tPatient Dashboard");
-        System.out.println("\t===============");
+        System.out.println("\t=================");
         System.out.println("\n1. View Personal Information");
         System.out.println("2. Request Appointment");
         System.out.println("3. View Appointment");
