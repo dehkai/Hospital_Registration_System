@@ -234,6 +234,7 @@ public class Appointment {
                     case 3:
                         System.out.println("\nThank you for using Hospital Management System. Goodbye!");
                         break; // No need to exit the program here
+                        
                     default:
                         throw new InputMismatchException("Invalid choice. Please enter 1, 2, or 3.");
                 }

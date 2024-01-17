@@ -96,7 +96,7 @@ public class Admin extends User {
     
             System.out.println("\nDoctor List:");
             System.out.printf("%-5s %-20s %-25s %-15s %-20s %-20s %-30s\n", "No.", "Name", "Email", "Phone Number", "Department", "Specialization", "Office Address");
-            System.out.println("=============================================================================================================================");
+            System.out.println("==============================================================================================================================");
     
             List<String> doctorList = new ArrayList<>();
             String line;
@@ -146,7 +146,7 @@ public class Admin extends User {
                         String doctorEmail = doctorInfo[0].trim();
     
                         // Remove doctor from doctorlist.txt
-                        doctorList.remove(selectedDoctor);
+                        removeDoctorFromList(doctorEmail);
     
                         for (String doctor : doctorList) {
                             bw.write(doctor);
@@ -219,18 +219,38 @@ public class Admin extends User {
         }
 
     }
+    private static void removeDoctorFromList(String doctorEmail) {
+        List<String> doctorListLines = new ArrayList<>();
     
+        try (BufferedReader brDoctor = new BufferedReader(new FileReader(DOCTOR_FILE_NAME))) {
+            String doctorLine;
     
-
-
-
-
+            while ((doctorLine = brDoctor.readLine()) != null) {
+                String[] doctorParts = doctorLine.split(",");
+                if (doctorParts.length == 6 && !doctorParts[0].trim().equals(doctorEmail)) {
+                    doctorListLines.add(doctorLine);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        // Rewrite doctorlist.txt without the removed doctor
+        try (BufferedWriter bwDoctor = new BufferedWriter(new FileWriter(DOCTOR_FILE_NAME))) {
+            for (String doctorLine : doctorListLines) {
+                bwDoctor.write(doctorLine);
+                bwDoctor.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     //viewDoctorList()
     public static void viewDoctorList() {
         try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_FILE_NAME))) {
             System.out.println("\nDoctor List:");
             System.out.printf("%-20s %-30s %-15s %-20s %-20s %-30s\n", "Email", "Name", "Phone Number", "Department", "Specialization", "Office Address");
-            System.out.println("===================================================================");
+            System.out.println("===========================================================================================================================");
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -256,7 +276,7 @@ public class Admin extends User {
         // Display the appointment list
         System.out.println("\nAppointment List:");
         System.out.printf("%-5s %-25s %-25s %-15s %-10s %-20s %-10s\n", "No.", "Patient Name", "Doctor Name", "Date", "Time", "Status", "Patient Email");
-        System.out.println("===================================================================================");
+        System.out.println("===============================================================================================================================");
 
         try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENT_FILE_NAME))) {
             String line;
