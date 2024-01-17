@@ -753,7 +753,7 @@ public class Admin extends User {
     
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) {
+                if ((parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) || (parts.length == 6 && parts[5].equalsIgnoreCase("discharged"))) {
                     System.out.printf("%-5d %-20s %-15s %-15s %-15s %-10s %-10s\n",
                             patientNumber, parts[0], parts[2], parts[3], parts[4], parts[5], parts[1]);
                     patientNumber++;
