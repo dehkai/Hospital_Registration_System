@@ -226,8 +226,27 @@ public class Admin extends User {
 
 
     //viewDoctorList()
-private static void viewDoctorList(){
-        
+    public static void viewDoctorList() {
+        try (BufferedReader br = new BufferedReader(new FileReader(DOCTOR_FILE_NAME))) {
+            System.out.println("\nDoctor List:");
+            System.out.printf("%-20s %-30s %-15s %-20s %-20s %-30s\n", "Email", "Name", "Phone Number", "Department", "Specialization", "Office Address");
+            System.out.println("===================================================================");
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] doctorInfo = line.split(",");
+                String email = doctorInfo[0];
+                String name = doctorInfo[1];
+                String phoneNumber = doctorInfo[2];
+                String department = doctorInfo[3];
+                String specialization = doctorInfo[4];
+                String officeAddress = doctorInfo[5];
+
+                System.out.printf("%-20s %-30s %-15s %-20s %-20s %-30s\n", email, name, phoneNumber, department, specialization, officeAddress);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading doctorlist.txt: " + e.getMessage());
+        }
     }
 
     //viewAppointment
