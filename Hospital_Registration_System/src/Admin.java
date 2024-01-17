@@ -806,7 +806,7 @@ public class Admin extends User {
     
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) {
+                if ((parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) || (parts.length == 6 && parts[5].equalsIgnoreCase("discharged"))) {
                     if (currentPatientNumber == selectedPatientNumber) {
                         return line;
                     }
@@ -825,7 +825,7 @@ public class Admin extends User {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 6 && parts[5].equalsIgnoreCase("admitted")) {
+                if ((parts.length == 6 && parts[5].equalsIgnoreCase("admitted"))  || (parts.length == 6 && parts[5].equalsIgnoreCase("discharged"))) {
                     count++;
                 }
             }
@@ -933,23 +933,6 @@ public class Admin extends User {
         System.out.printf("8. Role: %s\n", parts[2].trim());
     }
 
-    // private static void displayPatientAdditionalInfo(String patientEmail) {
-    //     try (BufferedReader brPatient = new BufferedReader(new FileReader(PATIENT_INFO_FILE))) {
-    //         String patientLine;
-
-    //         while ((patientLine = brPatient.readLine()) != null) {
-    //             String[] patientParts = patientLine.split(",");
-    //             if (patientParts.length == 3 && patientParts[0].trim().equals(patientEmail)) {
-    //                 // Display patient-specific details
-    //                 System.out.printf("9. Medical Record: %s\n", patientParts[1].trim());
-    //                 System.out.printf("10. Insurance Provider: %s\n", patientParts[2].trim());
-    //                 break;
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 
     private static void changeMedicalReport(String patientEmail) {
         // Prompt the user to change the medical report

@@ -1,3 +1,4 @@
 Ali bin Abu,010831-01-1235,Tan Woon Zhe,Flu Headache,B805,discharged
 Jamond,020909-01-1421,Morgan Steward,Dengue,A301,discharged
-Elizabeth,880911-08-0988,James Wan,Diabetes,A505,admitted
+Elizabeth,880911-08-0988,James Wan,Depression,A505,discharged
+William,0207878-08-1234,James Wan,Heavy Flu,A308,admitted
